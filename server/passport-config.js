@@ -45,9 +45,12 @@ passport.serializeUser((user, done) => {
 
 // The counterpart of serializeUser
 // The user id stored in the session is used to retrieve the whole object via the callback function
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
 });
 module.exports = passport;

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const recipesRouter = require('./routes/recipes');
 const authRoutes = require("./routes/authRoutes.js")
+const profileRoutes = require('./routes/profileRoutes'); 
 const app = express();
 const mongoose = require('mongoose');
 const passport = require('./passport-config');
@@ -24,7 +25,7 @@ app.use(passport.session());
 
 app.use('/api/recipes', recipesRouter);
 app.use('/auth', authRoutes);
-
+app.use('/api/user', profileRoutes);
 
 
 
@@ -60,6 +61,15 @@ app.post('/login',
     res.redirect('/'); // Or send some JSON response indicating success
   }
 );
+
+
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Unauthorized' });
+}
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
