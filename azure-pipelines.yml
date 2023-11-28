@@ -12,11 +12,23 @@ pool:
     - agent.name -equals ALPHA
 
 steps:
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'build'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
-
+- task: Npm@1
+  inputs:
+    command: 'install'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'custom'
+    customCommand: 'run build'
 - script: |
     npm install
     npm run build
